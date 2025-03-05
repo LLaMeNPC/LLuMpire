@@ -1,5 +1,5 @@
 
-class api_call_result:
+class ApiCallResult:
 
     def __init__(self, text, token_count) -> None:
         self.text = text
@@ -9,12 +9,12 @@ class api_call_result:
         print(f"----- text:\n{self.text}\n")
         print(f"----- token_count: {self.token_count}\n")
 
-class api:
+class Api:
 
     def __init__(self) -> None:
         pass
 
-    def request(self, input) -> api_call_result:
+    def request(self, input) -> ApiCallResult:
         raise Exception("Api 'request' method not overwritten")
 
 

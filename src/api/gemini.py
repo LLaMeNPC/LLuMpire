@@ -1,22 +1,20 @@
 from google import genai
-from api import api, api_call_result
+from api.api import Api, ApiCallResult
 import os
 
 api_key = os.environ["GEMINI_KEY"]
 
-class gemini(api):
+class Gemini(Api):
 
-    def request(self, input) -> api_call_result:
+    def request(self, input) -> ApiCallResult:
         client = genai.Client(api_key=api_key)
         response = client.models.generate_content(
             model="gemini-2.0-flash", contents=input
         )
 
-        return api_call_result(
+        return ApiCallResult(
             response.text,
             response.usage_metadata.total_token_count
         )
         
 
-api = gemini()
-api.request("How has your day been?").print()
