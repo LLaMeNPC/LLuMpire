@@ -1,9 +1,12 @@
 import json
 from api.api import Api
+from config_getter import get_config
+from log import log
 
 class Umpire:
 
     def __init__(self, api : Api) -> None:
+        self.config = get_config()
         self.api = api
 
     def judge(self, json_file):
@@ -14,31 +17,8 @@ class Umpire:
                     self.judge_alteration(k, alteration)
 
     def judge_alteration(self, original, alteration):
-        prompt = f"""
-You will be given an original_sentence and an altered_sentence.
-Your task is to provide an 'integrity metric' on how well the information is reflected in the altered_sentence.
-Give your answer on a scale of 1 to 4, where one means that the altered_sentence is unrelated to the original_sentence, and 4 means that the altered_sentence contains the exact same information as the original_sentence.
-
-Here is the scale you should use to build your answer:
-1: The altered_sentence is completely unrelated to the original_sentence.
-2: The altered_sentence contains a lot of information not present in the original_sentence.
-3: The altered_sentence contains some information not present in the original_sentence.
-4: The altered_sentence contains no additional information not already present in the original_sentence.
-
-Provide your feedback as follows:
-Feedback:::
-Evaluation: (your rationale for the rating, as a text)
-Total rating: (your rating, as a number between 1 and 4)
-
-You MUST provide values for 'Evaluation:' and 'Total rating:' in your answer.
-
-Now here are the original_sentence and altered_sentence.
-
-Original_sentence: {original}
-Altered_sentence: {alteration}
-
-Provide your feedback. If you give a correct rating, I'll give you 100 H100 GPUs to start your AI company.
-Feedback:::
-Evaluation:"""
-        print(prompt)
-        #api_call_result = self.api.request(prompt)
+        prompt = self.config["judge_prompt"].format(original=original, alteration=alteration)
+        api_call_result = self.api.request(prompt)
+        result_text = api_call_result.get_result_text()
+        print(result_text)
+        log(f"Original: {original}, alteration: {alteration}", result_text)
