@@ -11,3 +11,6 @@ def log(command, output=None):
         file.write(f"{time} {command}\n\n")
         if output is not None:
             file.write(f"\t{output}\n\n")
+
+def log_program_start():
+    log("---------------- program start ----------------")

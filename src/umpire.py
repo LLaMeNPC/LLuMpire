@@ -12,7 +12,8 @@ class Umpire:
     def judge(self, json_file):
         with open(json_file) as json_data:
             data = json.load(json_data)
-            for k, v in data.items():
+            alterations = data["output"]
+            for k, v in alterations.items():
                 for alteration in v:
                     self.judge_alteration(k, alteration)
 
