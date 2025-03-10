@@ -1,12 +1,13 @@
 You will be given an original_sentence and an altered_sentence.
 Your task is to provide an 'integrity metric' on how well the information is reflected in the altered_sentence.
-Give your answer on a scale of 1 to 4, where one means that the altered_sentence is unrelated to the original_sentence, and 4 means that the altered_sentence contains the exact same information as the original_sentence.
+Give your answer on a scale of 1 to 5, where one means that the altered_sentence is unrelated to the original_sentence, and 5 means that the altered_sentence contains the exact same information as the original_sentence.
 
 Here is the scale you should use to build your answer:
 1: The altered_sentence is completely unrelated to the original_sentence.
 2: The altered_sentence contains a lot of information not present in the original_sentence.
 3: The altered_sentence contains some information not present in the original_sentence.
 4: The altered_sentence contains no additional information not already present in the original_sentence.
+5: The altered_sentence does not contain substitute words for more specific words (eg. substituting cheese for cheddar would be a more specific substitution, but substituting cheese for dairy product would not)
 
 Provide your feedback as follows:
 Feedback:::
