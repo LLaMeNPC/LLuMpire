@@ -6,7 +6,7 @@ class ApiCallResult:
         self.token_count = token_count
 
     def get_result_text(self) -> str:
-        return f"----- text:\n{self.text}\n----- token_count: {self.token_count}\n"
+        return f"----- judgement:\n{self.text}\n----- token_count: {self.token_count}\n"
 
     #def print(self) -> None:
     #    print(f"----- text:\n{self.text}\n")
