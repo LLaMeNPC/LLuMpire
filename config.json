@@ -1,3 +1,4 @@
 {
-  "rpm": 15
+  "rpm": 15,
+  "judge_prompt_names": ["judge_prompt"]
 }
