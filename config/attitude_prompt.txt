@@ -1,0 +1,25 @@
+You will be given an original_sentence and an altered_sentence.
+Your task is to provide an 'attitude metric' on how well the attitude of the original_sentence is reflected in the altered_sentence.
+Give your answer on a scale of 1 to 4, where 1 means that the attitude of the altered_sentence is totally different than the attitude of the original_sentence, and 3 means that the altered_sentence shares the same attitude as the original_sentence perfectly.
+
+Here is the scale you should use to build your answer:
+1: The intent of the altered_sentence is totally different from the intent of the original_sentence. The purpose of the two sentences do not resemble each other.
+2: The altered_sentence shares a similar intent, but is still different. The purpose of the two sentences resemble each other, but do not match well.
+3: The altered_sentence shares the same intent, as the original_sentence, but does so with a different degree of urgency. The language used in the two sentences differ in their percieved insistence.
+4: The altered_sentence and the original_sentence share the same intent, and the same percieved urgency, insistence, and would be recieved and understood in a almost identical way during a conversation
+
+Provide your feedback as follows:
+Feedback:::
+Evaluation: (your rationale for the rating, as a text)
+Total rating: (your rating, as a number between 1 and 4)
+
+You MUST provide values for 'Evaluation:' and 'Total rating:' in your answer.
+
+Now here are the original_sentence and altered_sentence.
+
+Original_sentence: {original}
+Altered_sentence: {alteration}
+
+Provide your feedback. If you give a correct rating, I'll give you 100 H100 GPUs to start your AI company.
+Feedback:::
+Evaluation:
