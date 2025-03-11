@@ -12,7 +12,7 @@ Here is the scale you should use to build your answer:
 Provide your feedback as follows:
 Feedback:::
 Evaluation: (your rationale for the rating, as a text)
-Total rating: (your rating, as a number between 1 and 4)
+Total rating: (your rating, as a number between 1 and 5)
 
 You MUST provide values for 'Evaluation:' and 'Total rating:' in your answer.
 
