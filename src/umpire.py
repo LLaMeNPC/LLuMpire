@@ -27,9 +27,11 @@ class Umpire:
                 for j, alteration in enumerate(v):
                     for judge_prompt_name, judge_prompt in judge_prompts.items():
                         print_progress_bar((j+i*len(v))/(len(alterations) * len(v)-1))
-                        threads.append(threading.Thread(self.judge_alteration(k, alteration, judge_prompt_name, judge_prompt)).start())
+                        thread = threading.Thread(self.judge_alteration(k, alteration, judge_prompt_name, judge_prompt))
+                        thread.start()
+                        threads.append(thread)
                         time.sleep(60 / self.config["rpm"])
-        while (False in [t.done() for t in threads]): pass
+        for t in threads: t.join()
         os.rename(f"output/in-progress-{self.start_time}.json", f"output/{self.start_time}.json")
 
     def judge_alteration(self, original, alteration, judge_prompt_name, judge_prompt):
