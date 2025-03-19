@@ -1,4 +1,4 @@
-import sys, math
+import sys, math, os
 
 def delete_last_line():
     "Deletes the last line in the STDOUT"
@@ -20,3 +20,31 @@ def print_progress_bar(progress : float):
     is_new_progress_bar = False
     progress_string = "█" * math.floor(progress * 50) + "-" * math.ceil((1-progress) * 50) + f"| {progress * 100:.2f}%"
     print(progress_string)
+
+def cls():
+    print(chr(27) + "[2J")
+    #os.system('cls' if os.name=='nt' else 'clear')
+
+def choice(ls):
+    for i, le in enumerate(ls):
+        print(f"  {i}) {le}")
+    return input("Please select an option: ")
+
+def get_element_from_choice(choice, ls):
+    for i, le in enumerate(ls):
+        if choice == str(i) or choice == le:
+            return le
+        elif i == len(ls) - 1:
+            cls()
+            print(f"Option \"{choice}\" not recognized")
+            return None
+
+def queue_exit():
+    user_input = ""
+    while user_input != "q":
+        if user_input == "":
+            user_input = input("Input q to exit: ")
+        else:
+            user_input = input(f"\"{user_input}\" not recognized, input q to exit: ")
+        delete_last_line()
+            
