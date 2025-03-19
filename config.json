@@ -1,4 +1,4 @@
 {
   "rpm": 15,
-  "judge_prompt_names": ["attitude_prompt", "intent_prompt"]
+  "judge_prompt_names": ["attitude_prompt", "intent_prompt", "validity_prompt"]
 }
