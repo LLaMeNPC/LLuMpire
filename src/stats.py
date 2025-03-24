@@ -1,7 +1,6 @@
-import os, json
-from console_utils import cls, choice, get_element_from_choice, queue_exit
-from log import log
-
+import os, json, re
+from console_utils import cls, choice, get_element_from_choice, queue_exit, print_progress_bar
+import matplotlib.pyplot as plt
 
 def user_initialize():
     global chosen_file
@@ -14,8 +13,10 @@ def user_initialize():
     chosen_file = f"output/{get_element_from_choice(choice(output_files), output_files)}"
     
     options = [
-        "averages",
-        "input_averages"
+        "metric_averages",
+        "input_averages",
+        "metric_graphs",
+        "input_graphs"
     ]
 
     while True:
@@ -25,7 +26,7 @@ def user_initialize():
         averages = None
 
         user_choice = get_element_from_choice(choice(options), options)
-        if user_choice == "averages":
+        if user_choice == "metric_averages":
             cls()
             accumulations = get_accumulation(chosen_file) if accumulations == None else accumulations
             averages = get_averages(accumulations) if averages == None else averages
@@ -45,15 +46,48 @@ def user_initialize():
                     print(f"\t\t{metric}: {average}")
                 print()
             queue_exit()
+        
+        elif user_choice == "metric_graphs":
+            cls()
+
+            accumulations = get_accumulation(chosen_file) if accumulations == None else accumulations
+
+            print("Showing Metric graphs.... close one to see the next one")
+            for metric, accs in accumulations["metric"].items():
+                plt.title(metric.title())
+                plot_values(accs)
+                plt.show()
+            queue_exit()
+        elif user_choice == "input_graphs":
+            cls()
+            filename = chosen_file.split("/")[-1]
+            filename = re.sub(r'[\\/*?:"<>|]',"",filename)
+
+            try:
+                os.mkdir(f"output/graphs/{filename}")
+
+                accumulations = get_accumulation(chosen_file) if accumulations == None else accumulations
+                averages = get_averages(accumulations) if averages == None else averages
+
+                for i, (_input, metrics) in enumerate(averages["input_averages"].items()):
+                    #print_progress_bar(i / len(averages["input_averages"]))
+                    plt.title(_input.title())
+                    print("---------------------")
+                    print(metrics.keys())
+                    print(metrics.values())
+                    plt.bar(metrics.keys(), metrics.values())
+                    plt.savefig(f"output/graphs/{filename}/{_input}.svg")
+
+            except FileExistsError:
+                print(f"Graphs for file {filename} already exist in \"output/graphs/{filename}\"")
+            queue_exit()
+                
 
 
-def _add_value_to_acc(value, acc_d):
-    acc_d["acc"] += value
-    acc_d["n"] += 1
 
 def get_accumulation(data_file):
     acc = {
-        "total": {"acc": 0, "n": 0},
+        "total": [],
         "metric": {},
         "input": {}
     }
@@ -63,18 +97,18 @@ def get_accumulation(data_file):
             for metric, judgements in metrics.items():                
                 metric_key = metric.removesuffix("_prompt_scores")
                 if not metric_key in acc["metric"].items():
-                    acc["metric"][metric_key] = {"acc": 0, "n": 0}
+                    acc["metric"][metric_key] = []
                 if not metric_key in acc["input"][original]:
-                    acc["input"][original][metric_key] = {"acc": 0, "n": 0}
+                    acc["input"][original][metric_key] = []
                 for judgement in judgements:
-                    _add_value_to_acc(judgement["score"], acc["metric"][metric_key])
-                    _add_value_to_acc(judgement["score"], acc["input"][original][metric_key])
+                    acc["metric"][metric_key].append(judgement["score"])
+                    acc["input"][original][metric_key].append(judgement["score"])
     return acc
     
-def _get_average(acc):
-    if acc["n"] == 0:
+def _get_average(li):
+    if len(li) == 0:
         return "Not implemented"
-    return acc["acc"] / acc["n"]
+    return sum(li) / len(li)
 
 def get_averages(accs):
     averages = {
@@ -90,3 +124,10 @@ def get_averages(accs):
             averages["input_averages"][input][metric] = _get_average(acc)
 
     return averages
+
+def plot_values(vals):
+    val_amnts = [0] * 5
+    for val in vals:
+        val_amnts[val] += 1
+
+    plt.bar(range(5), val_amnts)
