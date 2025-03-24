@@ -25,5 +25,4 @@ if len(sys.argv) == 1:
 else:
     api = Gemini()
     umpire = Umpire(api)
-    log("Config:", umpire.config)
     umpire.judge(sys.argv[1])
