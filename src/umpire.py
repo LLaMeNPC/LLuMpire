@@ -21,32 +21,33 @@ class Umpire:
         threads = []
         with open(json_file) as json_data:
             data = json.load(json_data)
-            alterations = data["output"]
-            for i, tup in enumerate(alterations.items()):
-                (k, v) = tup
-                self.data[k] = {
+            generation_dicts = data["output"]
+            for i, (title, generation_dict) in enumerate(generation_dicts.items()):
+                self.data[title] = {
                     f"{metric_name}_scores": [] for metric_name in metrics.keys()
                 }
-                for j, alteration in enumerate(v):
+                generation_prompt = generation_dict["prompt"]
+                generations = generation_dict["generations"]
+                for j, generation in enumerate(generations):
                     for metric_name, metric_data in metrics.items():
-                        print_progress_bar((j+i*len(v))/(len(alterations) * len(v)-1))
-                        thread = threading.Thread(self.judge_alteration(k, alteration, metric_name, metric_data["prompt"]))
+                        print_progress_bar((j+i*len(generation_dict))/(len(generation_dicts) * len(generation_dict)-1))
+                        thread = threading.Thread(self.judge_alteration(title, generation_prompt, generation, metric_name, metric_data["prompt"]))
                         thread.start()
                         threads.append(thread)
                         time.sleep(60 / self.config["rpm"])
         for t in threads: t.join()
         os.rename(f"output/in-progress-{self.start_time}.json", f"output/{self.start_time}.json")
 
-    def judge_alteration(self, original, alteration, metric_name, prompt):
-        prompt = prompt.format(original=original, alteration=alteration)
-        api_call_result = self.api.request(prompt)
+    def judge_alteration(self, title, generation_prompt, generation, metric_name, judge_prompt):
+        judge_prompt = judge_prompt.format(original=title, alteration=generation)
+        api_call_result = self.api.request(judge_prompt)
         result_text = api_call_result.get_result_text()
-        self.data[original][f"{metric_name}_scores"].append({
-            "alteration": alteration,
+        self.data[title][f"{metric_name}_scores"].append({
+            "alteration": generation,
             "score": api_call_result.get_judgement_value()
         })
         self.update_output()
-        log(f"------------------------------------------ {metric_name}\n\tOriginal: {original}\n\tAlteration: {alteration}", result_text)
+        log(f"------------------------------------------ {metric_name}\n\tOriginal: {title}\n\tAlteration: {generation}", result_text)
 
     def set_metrics(self):
         metrics = self.config["metrics"]
