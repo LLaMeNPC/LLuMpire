@@ -47,4 +47,11 @@ def queue_exit():
         else:
             user_input = input(f"\"{user_input}\" not recognized, input q to exit: ")
         delete_last_line()
-            
+
+def digit_percentage(*digit_tups):
+    value = 0
+    max_value = 1
+    for digit, max_digit in reversed(digit_tups):
+        value += digit * max_value
+        max_value *= max_digit
+    return value / (max_value - 1)            

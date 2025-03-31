@@ -1,7 +1,7 @@
 import time, datetime, json, threading, os
 from api.api import Api
 from config_getter import get_config, get_txt_data
-from console_utils import print_progress_bar
+from console_utils import print_progress_bar, digit_percentage
 from log import log
 
 class Umpire:
@@ -29,8 +29,9 @@ class Umpire:
                 generation_prompt = generation_dict["prompt"]
                 generations = generation_dict["generations"]
                 for j, generation in enumerate(generations):
-                    for metric_name, metric_data in metrics.items():
-                        print_progress_bar((j+i*len(generation_dict))/(len(generation_dicts) * len(generation_dict)-1))
+                    for k, (metric_name, metric_data) in enumerate(metrics.items()):
+                        progress_percentage = digit_percentage((i, len(generation_dicts)), (j, len(generations)), (k, len(metrics)))
+                        print_progress_bar(progress_percentage)
                         thread = threading.Thread(self.judge_alteration(title, generation_prompt, generation, metric_name, metric_data["prompt"]))
                         thread.start()
                         threads.append(thread)
