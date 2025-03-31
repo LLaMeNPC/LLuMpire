@@ -9,6 +9,7 @@ def user_initialize():
     print("Which output file would you like to view stats on?")
     output_files = os.listdir("output")
     output_files.remove(".gitkeep")
+    output_files.remove("graphs")
     output_files.sort()
     chosen_file = f"output/{get_element_from_choice(choice(output_files), output_files)}"
     
@@ -16,7 +17,8 @@ def user_initialize():
         "metric_averages",
         "input_averages",
         "metric_graphs",
-        "input_graphs"
+        "input_averages_graphs",
+        "input_values_graphs"
     ]
 
     while True:
@@ -54,35 +56,69 @@ def user_initialize():
 
             print("Showing Metric graphs.... close one to see the next one")
             for metric, accs in accumulations["metric"].items():
+                plt.close()
                 plt.title(metric.title())
                 plot_values(accs)
                 plt.show()
             queue_exit()
-        elif user_choice == "input_graphs":
+        elif user_choice == "input_averages_graphs":
             cls()
             filename = chosen_file.split("/")[-1]
             filename = re.sub(r'[\\/*?:"<>|]',"",filename)
 
+            _try_create_dir(f"output/graphs/{filename}")
+
             try:
-                os.mkdir(f"output/graphs/{filename}")
+                os.mkdir(f"output/graphs/{filename}/input_averages")
 
                 accumulations = get_accumulation(chosen_file) if accumulations == None else accumulations
                 averages = get_averages(accumulations) if averages == None else averages
 
                 for i, (_input, metrics) in enumerate(averages["input_averages"].items()):
                     #print_progress_bar(i / len(averages["input_averages"]))
+                    plt.close()
                     plt.title(_input.title())
                     print("---------------------")
                     print(metrics.keys())
                     print(metrics.values())
                     plt.bar(metrics.keys(), metrics.values())
-                    plt.savefig(f"output/graphs/{filename}/{_input}.svg")
+                    plt.savefig(f"output/graphs/{filename}/input_averages/{_input}.svg")
 
             except FileExistsError:
-                print(f"Graphs for file {filename} already exist in \"output/graphs/{filename}\"")
+                print(f"Graphs for file {filename} already exist in \"output/graphs/{filename}/input_averages\"")
+            queue_exit()
+
+        elif user_choice == "input_values_graphs":
+            cls()
+
+            filename = chosen_file.split("/")[-1]
+            filename = re.sub(r'[\\/*?:"<>|]',"",filename)
+
+            _try_create_dir(f"output/graphs/{filename}")
+
+            try:
+                os.mkdir(f"output/graphs/{filename}/input_values")
+
+                accumulations = get_accumulation(chosen_file) if accumulations == None else accumulations
+                
+                for k, v in accumulations["input"].items():
+                    os.mkdir(f"output/graphs/{filename}/input_values/{k}")
+                    for metric, metric_acc in accumulations["metric"].items():
+                        plt.close()
+                        plt.title(f"{k} - {metric.title()}")
+                        plot_values(metric_acc)
+                        plt.savefig(f"output/graphs/{filename}/input_values/{k}/{metric.title()}.svg")
+                    
+            except FileExistsError:
+                print(f"Graphs for file {filename} already exist in \"output/graphs/{filename}/input_values\"")
             queue_exit()
                 
 
+def _try_create_dir(path):
+    try:
+        os.mkdir(path)
+    except FileExistsError:
+        pass
 
 
 def get_accumulation(data_file):
@@ -129,5 +165,5 @@ def plot_values(vals):
     val_amnts = [0] * 5
     for val in vals:
         val_amnts[val] += 1
-
+    
     plt.bar(range(5), val_amnts)
