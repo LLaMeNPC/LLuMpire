@@ -103,9 +103,10 @@ def user_initialize():
                 
                 for k, v in accumulations["input"].items():
                     os.mkdir(f"output/graphs/{filename}/input_values/{k}")
-                    for metric, metric_acc in accumulations["metric"].items():
+                    for metric, metric_acc in v.items():
                         plt.close()
                         plt.title(f"{k} - {metric.title()}")
+                        print(metric_acc)
                         plot_values(metric_acc)
                         plt.savefig(f"output/graphs/{filename}/input_values/{k}/{metric.title()}.svg")
                     
@@ -132,7 +133,8 @@ def get_accumulation(data_file):
             acc["input"][original] = {}
             for metric, judgements in metrics.items():                
                 metric_key = metric.removesuffix("_prompt_scores")
-                if not metric_key in acc["metric"].items():
+                if not metric_key in acc["metric"].keys():
+                    print(metric_key)
                     acc["metric"][metric_key] = []
                 if not metric_key in acc["input"][original]:
                     acc["input"][original][metric_key] = []
