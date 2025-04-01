@@ -8,6 +8,9 @@ class ApiCallResult:
     def get_result_text(self) -> str:
         return f"----- judgement:\n{self.text}\n----- token_count: {self.token_count}\n"
 
+    def get_text(self) -> str:
+        return self.text
+
     # Returns last character, asuming it is a one digit score value
     def get_judgement_value(self) -> int: 
         return int(self.text.strip().strip(",.-\"'")[-1])

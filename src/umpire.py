@@ -2,7 +2,7 @@ import time, datetime, json, threading, os
 from api.api import Api
 from config_getter import get_config, get_txt_data
 from console_utils import print_progress_bar, digit_percentage
-from log import log
+from log import log, _log
 
 class Umpire:
 
@@ -24,31 +24,39 @@ class Umpire:
             generation_dicts = data["output"]
             for i, (title, generation_dict) in enumerate(generation_dicts.items()):
                 self.data[title] = {
-                    f"{metric_name}_scores": [] for metric_name in metrics.keys()
+                    metric_name: {} for metric_name in metrics.keys()
                 }
                 generation_prompt = generation_dict["prompt"]
                 generations = generation_dict["generations"]
                 for j, generation in enumerate(generations):
+                    metric_threads = []
                     for k, (metric_name, metric_data) in enumerate(metrics.items()):
                         progress_percentage = digit_percentage((i, len(generation_dicts)), (j, len(generations)), (k, len(metrics)))
                         print_progress_bar(progress_percentage)
                         thread = threading.Thread(self.judge_alteration(title, generation_prompt, generation, metric_name, metric_data["prompt"]))
                         thread.start()
                         threads.append(thread)
+                        metric_threads.append(thread)
                         time.sleep(60 / self.config["rpm"])
+                    threading.Thread(self.log_metric_threads(title, generation_prompt, generation, metric_threads)).start()
         for t in threads: t.join()
         os.rename(f"output/in-progress-{self.start_time}.json", f"output/{self.start_time}.json")
 
     def judge_alteration(self, title, generation_prompt, generation, metric_name, judge_prompt):
         judge_prompt = judge_prompt.format(original=title, alteration=generation)
         api_call_result = self.api.request(judge_prompt)
-        result_text = api_call_result.get_result_text()
-        self.data[title][f"{metric_name}_scores"].append({
-            "alteration": generation,
-            "score": api_call_result.get_judgement_value()
-        })
+        self.data[title][metric_name][generation] = {
+            "score": api_call_result.get_judgement_value(),
+            "reasoning": api_call_result.get_text(),
+        }
+
+        #self.data[title][metric_name].append({
+        #    "alteration": generation,
+        #    "score": api_call_result.get_judgement_value(),
+        #    "reasoning": result_text,
+        #})
         self.update_output()
-        log(f"------------------------------------------ {metric_name}\n\tOriginal: {title}\n\tAlteration: {generation}", result_text)
+        #log(f"------------------------------------------ {metric_name}\n\tOriginal: {title}\n\tAlteration: {generation}", result_text)
 
     def set_metrics(self):
         metrics = self.config["metrics"]
@@ -69,3 +77,12 @@ class Umpire:
         for metric_name, metric_data in self.config["metrics"].items():
             str += f"--- {metric_name} ---\n\n{metric_data["prompt"]}\n"
         log("Metric prompts:", str)
+
+    def log_metric_threads(self, title, generation_prompt, generation, metric_threads):
+        for t in metric_threads: t.join()
+        log(f"------------------------------------------ Title: {title} \n\tGeneration prompt: {generation_prompt}\n\tGeneration: {generation}")
+        for metric_name, v in self.data[title].items():
+            _log(f"{metric_name} score: {v[generation]["score"]}\n")
+        _log("\n")
+        for metric_name, v in self.data[title].items():
+            _log(f"{metric_name} reasoning:\n\t{v[generation]["reasoning"]}\n")
