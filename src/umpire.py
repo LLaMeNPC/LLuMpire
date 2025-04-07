@@ -43,7 +43,8 @@ class Umpire:
         os.rename(f"output/in-progress-{self.start_time}.json", f"output/{self.start_time}.json")
 
     def judge_alteration(self, title, generation_prompt, generation, generation_index, metric_name, judge_prompt):
-        judge_prompt = judge_prompt.format(original=title, alteration=generation)
+        #judge_prompt = judge_prompt.format(original=title, alteration=generation)
+        judge_prompt = judge_prompt.format(llm_prompt=generation_prompt, generated_output=generation)
         api_call_result = self.api.request(judge_prompt)
         self.data[title][metric_name][generation_index] = {
             "generation": generation,
