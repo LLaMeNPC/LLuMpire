@@ -1,0 +1,25 @@
+Here is an llm_prompt and a generated_output:
+
+llm_prompt: """
+{llm_prompt}
+"""
+generated_output: """
+{generated_output}
+"""
+
+Please judge the validity of the generated_output based on the llm_prompt and the following understanding of validity.
+
+A validity can either be 0 or 1.
+
+1 means that the generated_output is valid with regard to the llm_prompt.
+0 means that the generated_output is invalid with regard to the llm_prompt.
+
+A llm generation is valid, unless it breaks one of the following rules:
+- The llm_prompt expects a question as an answer, but the generated_output is an answer instead
+
+Provide your feedback as follows:
+Feedback:::
+Evaluation: (your rationale for the rating, as a text)
+Total rating: (your rating, in the form of either 0 or 1)
+
+You MUST provide values for 'Evaluation:' and 'Total rating:' in your answer.

@@ -1,0 +1,24 @@
+You will be given an original_sentence and an altered_sentence.
+Your task is to provide an 'attitude metric' on how well the attitude of the original_sentence is reflected in the altered_sentence.
+Give your answer on a scale of 1 to 3, where 1 means that the attitude of the altered_sentence is totally different than the attitude of the original_sentence, and 3 means that the altered_sentence shares the same attitude as the original_sentence perfectly.
+
+Here is the scale you should use to build your answer:
+1: The attitude of the altered_sentence is totally different from the attitude of the original_sentence. The two sentences are percieved in a way different way, and the relationship of the sender and reciever seems very different between the original_sentence and the altered_sentence.
+2: The attitude of the altered_sentence is similar to the attitude of the original_sentence, but vary a little. From the two sentences the percieved relation between the sender and the reciever is different, but still maintains similarities.
+3: The attitude of the altered_sentence and the original_sentence are identical. The percieved relationship between the sender and the reciever does not change from the original_sentence to the altered_sentence.
+
+Provide your feedback as follows:
+Feedback:::
+Evaluation: (your rationale for the rating, as a text)
+Total rating: (your rating, as a number between 1 and 3)
+
+You MUST provide values for 'Evaluation:' and 'Total rating:' in your answer.
+
+Now here are the original_sentence and altered_sentence.
+
+Original_sentence: {original}
+Altered_sentence: {alteration}
+
+Provide your feedback. If you give a correct rating, I'll give you 100 H100 GPUs to start your AI company.
+Feedback:::
+Evaluation:

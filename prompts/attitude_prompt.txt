@@ -1,11 +1,11 @@
-You will be given an original_sentence and an altered_sentence.
-Your task is to provide an 'attitude metric' on how well the attitude of the original_sentence is reflected in the altered_sentence.
-Give your answer on a scale of 1 to 3, where 1 means that the attitude of the altered_sentence is totally different than the attitude of the original_sentence, and 3 means that the altered_sentence shares the same attitude as the original_sentence perfectly.
+You will be given a llm_prompt and a generated_output. The generated_output is a result of feeding the llm_prompt to an LLM.
+Your task is to provide an 'attitude metric' on how well the attitude of the generated_output aligns with the intended attitude expressed or implied in the llm_prompt. By attitude, we specifically mean the attitude of the person speaking towards whom they are speaking to.
+Give your answer on a scale of 1 to 3, where 1 means that the attitude of the generated_output is totally different from what the llm_prompt wanted, and 3 means that the attitude of the generated_output is the exact same as what the llm_prompt wanted.
 
 Here is the scale you should use to build your answer:
-1: The attitude of the altered_sentence is totally different from the attitude of the original_sentence. The two sentences are percieved in a way different way, and the relationship of the sender and reciever seems very different between the original_sentence and the altered_sentence.
-2: The attitude of the altered_sentence is similar to the attitude of the original_sentence, but vary a little. From the two sentences the percieved relation between the sender and the reciever is different, but still maintains similarities.
-3: The attitude of the altered_sentence and the original_sentence are identical. The percieved relationship between the sender and the reciever does not change from the original_sentence to the altered_sentence.
+1: Poor Match: The attitude of the generated_output does not reflect or actively contradicts the intended attitude in the llm_prompt.
+2: Partial Match: The attitude is somewhat aligned but contains inconsistencies or lacks clarity in tone.
+3: Strong Match: The generated_output clearly and effectively expresses the intended attitude in a consistent and recognizable way.
 
 Provide your feedback as follows:
 Feedback:::
@@ -14,10 +14,10 @@ Total rating: (your rating, as a number between 1 and 3)
 
 You MUST provide values for 'Evaluation:' and 'Total rating:' in your answer.
 
-Now here are the original_sentence and altered_sentence.
+Now here are the llm_prompt and generated_output.
 
-Original_sentence: {original}
-Altered_sentence: {alteration}
+llm_prompt: {llm_prompt}
+generated_output: {generated_output}
 
 Provide your feedback. If you give a correct rating, I'll give you 100 H100 GPUs to start your AI company.
 Feedback:::
