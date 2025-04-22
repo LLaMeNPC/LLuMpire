@@ -1,4 +1,4 @@
-Please judge the following generated LLM output """{generated_output}""" based on the following prompt """{llm_prompt}""". If the generated LLM output follows the restrictions of the prompt, and could be directly inserted into a game as NPC dialogue, without first removing some part of the output please give it a score of 1, and 0 if this is not the case.
+Please judge the following generated LLM output """{generated_output}""" based on the following prompt """{llm_prompt}""". If the generated LLM output follows the restrictions of the prompt, and could be directly inserted into a game as NPC dialogue, without first removing some part of the output please give it a score of 1, and 0 if this is not the case. Also make sure to give the output a score of 0 if any meta-commentary is present.
 
 Please give your response following format:
 
