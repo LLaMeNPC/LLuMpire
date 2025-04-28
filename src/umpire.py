@@ -28,6 +28,8 @@ class Umpire:
                 self.data[title] = {
                     metric_name: [None for _ in generations] for metric_name in metrics.keys()
                 }
+                self.judge_variation(title, generation_prompt, generations)
+                time.sleep(60 / self.config["rpm"])
                 for j, generation in enumerate(generations):
                     metric_threads = []
                     for k, (metric_name, metric_data) in enumerate(metrics.items()):
@@ -53,6 +55,12 @@ class Umpire:
         }
         self.update_output()
         #log(f"------------------------------------------ {metric_name}\n\tOriginal: {title}\n\tAlteration: {generation}", result_text)
+
+    def judge_variation(self, title, generation_prompt, generations):
+        judge_prompt = self.config["variation_prompt"].format(dialogue=generations)
+        api_call_result = self.api.request(judge_prompt)
+        log(f"------------------------------------------ Title: {title}\n\tGeneration prompt: {generation_prompt}\n\tGenerations: {generations}")
+        log(api_call_result.get_text())
 
     def set_metrics(self):
         metrics = self.config["metrics"]

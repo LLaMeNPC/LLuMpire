@@ -1,0 +1,15 @@
+You will be given multiple dialogue pieces separated by newlines. All dialogue pieces are supposed to have the same meaning, emotion and tone, but different wording. However, they also need to have variation. Your task is to judge how different they are, by giving them a score from 1 to 3.
+
+Here is the scale you should use to build your answer:
+1: Almost all of the dialogue pieces are almost identical and have almost identical wording.
+2: Around half of the dialogue pieces are almost identical and have almost identical wording.
+3: Almost none of the dialogue pieces are almost identical and have almost identical wording.
+
+Here comes the dialogue pieces.
+
+{dialogue}
+
+Now, please give your response following format:
+
+Reasoning:
+Score:
