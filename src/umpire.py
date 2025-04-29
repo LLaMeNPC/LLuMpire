@@ -17,6 +17,10 @@ class Umpire:
         self.start_time = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S') if start_time == "" else start_time
 
     def judge(self, json_file):
+        file_name = f"{self.start_time}{os.path.basename(json_file).removesuffix(".json")}.json"
+        self.tmp_file_path = f"output/in-progress-{file_name}"
+        self.final_file_path = f"output/{file_name}"
+
         metrics = self.config["metrics"]
         threads = []
         with open(json_file) as json_data:
@@ -28,7 +32,9 @@ class Umpire:
                 self.data[title] = {
                     metric_name: [None for _ in generations] for metric_name in metrics.keys()
                 }
-                self.judge_variation(title, generation_prompt, generations)
+                thread = threading.Thread(self.judge_variation(title, generation_prompt, generations))
+                thread.start()
+                threads.append(thread)
                 time.sleep(60 / self.config["rpm"])
                 for j, generation in enumerate(generations):
                     metric_threads = []
@@ -42,7 +48,7 @@ class Umpire:
                         time.sleep(60 / self.config["rpm"])
                     threading.Thread(self.log_metric_threads(title, generation_prompt, generation, j, metric_threads)).start()
         for t in threads: t.join()
-        os.rename(f"output/in-progress-{self.start_time}.json", f"output/{self.start_time}.json")
+        os.rename(self.tmp_file_path, self.final_file_path)
 
     def judge_alteration(self, title, generation_prompt, generation, generation_index, metric_name, judge_prompt):
         #judge_prompt = judge_prompt.format(original=title, alteration=generation)
@@ -70,7 +76,7 @@ class Umpire:
             metrics[metric_name]["prompt"] = prompt
 
     def update_output(self):
-        with open(f"output/in-progress-{self.start_time}.json", "w") as f:
+        with open(self.tmp_file_path, "w") as f:
             f.write(json.dumps(self.data))
             
     def log_config(self):

@@ -173,6 +173,8 @@ cython_debug/
 output/*
 !output/.gitkeep
 !output/graphs/.gitkeep
+old_output/*
+!old_output/.gitkeep
 logs/*
 !logs/.gitkeep
 
