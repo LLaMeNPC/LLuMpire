@@ -25,4 +25,10 @@ if len(sys.argv) == 1:
 else:
     api = Gemini()
     umpire = Umpire(api)
-    umpire.judge(sys.argv[1])
+    try:
+        umpire.judge(sys.argv[1])
+        log(f"Judge finnished")
+    except:
+        log(f"Judge failed")
+        
+    log(f"Total requests: {api.request_num} - Total retries: {api.retry_num}")

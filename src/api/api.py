@@ -1,3 +1,4 @@
+from log import log
 
 class ApiCallResult:
 
@@ -22,9 +23,12 @@ class ApiCallResult:
 class Api:
 
     def __init__(self) -> None:
-        pass
+        self.retry_num = 0
+        self.request_num = 0
 
     def request(self, input) -> ApiCallResult:
         raise Exception("Api 'request' method not overwritten")
 
-
+    def register_retry(self):
+        self.retry_num += 1
+        log("Request failed - retrying")

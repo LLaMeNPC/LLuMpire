@@ -67,6 +67,10 @@ class Umpire:
         api_call_result = self.api.request(judge_prompt)
         log(f"------------------------------------------ Title: {title}\n\tGeneration prompt: {generation_prompt}\n\tGenerations: {generations}")
         log(api_call_result.get_text())
+        self.data[title]["variation"] = [{
+            "score": api_call_result.get_judgement_value(),
+            "reasoning": api_call_result.get_text(),
+        }]
 
     def set_metrics(self):
         metrics = self.config["metrics"]
@@ -92,7 +96,11 @@ class Umpire:
         for t in metric_threads: t.join()
         log(f"------------------------------------------ Title: {title} \n\tGeneration prompt: {generation_prompt}\n\tGeneration: {generation}\n\tGeneration index: {generation_index}")
         for metric_name, v in self.data[title].items():
+            if metric_name == "variation":
+                continue
             _log(f"{metric_name} score: {v[generation_index]["score"]}\n")
         _log("\n")
         for metric_name, v in self.data[title].items():
+            if metric_name == "variation":
+                continue
             _log(f"{metric_name} reasoning:\n\t{v[generation_index]["reasoning"]}\n")
