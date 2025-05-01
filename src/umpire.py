@@ -14,10 +14,10 @@ class Umpire:
         
         self.api = api
         self.data = {}
-        self.start_time = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S') if start_time == "" else start_time
+        self.start_time = datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S') if start_time == "" else start_time
 
     def judge(self, json_file):
-        file_name = f"{self.start_time}{os.path.basename(json_file).removesuffix(".json")}.json"
+        file_name = f"{self.start_time}_{os.path.basename(json_file).removesuffix(".json")}.json"
         self.tmp_file_path = f"output/in-progress-{file_name}"
         self.final_file_path = f"output/{file_name}"
 
