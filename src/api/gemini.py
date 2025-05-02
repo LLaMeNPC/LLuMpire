@@ -1,4 +1,5 @@
 from google import genai
+from google.genai import types
 from api.api import Api, ApiCallResult
 import os
 import time
@@ -20,7 +21,7 @@ class Gemini(Api):
     def _request(self, input) -> ApiCallResult:
         client = genai.Client(api_key=api_key)
         response = client.models.generate_content(
-            model="gemini-2.0-flash", contents=input
+            model="gemini-2.0-flash", contents=input, config=types.GenerateContentConfig(temperature=0.0)
         )
 
         self.request_num += 1
