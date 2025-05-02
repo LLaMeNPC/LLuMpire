@@ -1,3 +1,4 @@
+from config_getter import get_config
 from log import log
 
 class ApiCallResult:
@@ -23,6 +24,7 @@ class ApiCallResult:
 class Api:
 
     def __init__(self) -> None:
+        self.config = get_config()
         self.retry_num = 0
         self.request_num = 0
 

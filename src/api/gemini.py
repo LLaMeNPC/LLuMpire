@@ -3,13 +3,14 @@ from google.genai import types
 from api.api import Api, ApiCallResult
 import os
 import time
-from log import log
 
 api_key = os.environ["GEMINI_KEY"]
 
 class Gemini(Api):
 
-    def request(self, input, max_retries=5, retry_delay=2) -> ApiCallResult:
+    def request(self, input) -> ApiCallResult:
+        max_retries = self.config["max_request_retries"]
+        retry_delay = self.config["request_retry_delay"]
         for attempt in range(max_retries - 1):
             try:
                 return self._request(input)
