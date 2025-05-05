@@ -7,11 +7,11 @@ def user_initialize():
     cls()
 
     print("Which output file would you like to view stats on?")
-    output_files = os.listdir("output")
+    output_files = os.listdir("shared_output")
     output_files.remove(".gitkeep")
     output_files.remove("graphs")
     output_files.sort()
-    chosen_file = f"output/{get_element_from_choice(choice(output_files), output_files)}"
+    chosen_file = f"shared_output/{get_element_from_choice(choice(output_files), output_files)}"
     
     options = [
         "metric_averages",
@@ -66,10 +66,10 @@ def user_initialize():
             filename = chosen_file.split("/")[-1]
             filename = re.sub(r'[\\/*?:"<>|]',"",filename)
 
-            _try_create_dir(f"output/graphs/{filename}")
+            _try_create_dir(f"shared_output/graphs/{filename}")
 
             try:
-                os.mkdir(f"output/graphs/{filename}/input_averages")
+                os.mkdir(f"shared_output/graphs/{filename}/input_averages")
 
                 accumulations = get_accumulation(chosen_file) if accumulations == None else accumulations
                 averages = get_averages(accumulations) if averages == None else averages
@@ -82,10 +82,10 @@ def user_initialize():
                     print(metrics.keys())
                     print(metrics.values())
                     plt.bar(metrics.keys(), metrics.values())
-                    plt.savefig(f"output/graphs/{filename}/input_averages/{_input}.svg")
+                    plt.savefig(f"shared_output/graphs/{filename}/input_averages/{_input}.svg")
 
             except FileExistsError:
-                print(f"Graphs for file {filename} already exist in \"output/graphs/{filename}/input_averages\"")
+                print(f"Graphs for file {filename} already exist in \"shared_output/graphs/{filename}/input_averages\"")
             queue_exit()
 
         elif user_choice == "input_values_graphs":
@@ -94,24 +94,24 @@ def user_initialize():
             filename = chosen_file.split("/")[-1]
             filename = re.sub(r'[\\/*?:"<>|]',"",filename)
 
-            _try_create_dir(f"output/graphs/{filename}")
+            _try_create_dir(f"shared_output/graphs/{filename}")
 
             try:
-                os.mkdir(f"output/graphs/{filename}/input_values")
+                os.mkdir(f"shared_output/graphs/{filename}/input_values")
 
                 accumulations = get_accumulation(chosen_file) if accumulations == None else accumulations
                 
                 for k, v in accumulations["input"].items():
-                    os.mkdir(f"output/graphs/{filename}/input_values/{k}")
+                    os.mkdir(f"shared_output/graphs/{filename}/input_values/{k}")
                     for metric, metric_acc in v.items():
                         plt.close()
                         plt.title(f"{k} - {metric.title()}")
                         print(metric_acc)
                         plot_values(metric_acc)
-                        plt.savefig(f"output/graphs/{filename}/input_values/{k}/{metric.title()}.svg")
+                        plt.savefig(f"shared_output/graphs/{filename}/input_values/{k}/{metric.title()}.svg")
                     
             except FileExistsError:
-                print(f"Graphs for file {filename} already exist in \"output/graphs/{filename}/input_values\"")
+                print(f"Graphs for file {filename} already exist in \"shared_output/graphs/{filename}/input_values\"")
             queue_exit()
                 
 
