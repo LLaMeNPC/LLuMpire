@@ -11,7 +11,7 @@ log_program_start()
 if len(sys.argv) == 1:
     cls()
     view_mode_options = [
-        "Alterations",
+        #"Alterations",
         "Stats"
     ]
     print("You are running LLuMpire in view mode. To run LLuMpire on output, please give a data file as argument.")
